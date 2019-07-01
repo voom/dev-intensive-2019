@@ -6,7 +6,7 @@ class UserView(
     val nickName: String,
     var avatar: String? = null,
     var status: String? = "offline",
-    val initials: String
+    val initials: String?
 ) {
     fun printMe() {
         println("""

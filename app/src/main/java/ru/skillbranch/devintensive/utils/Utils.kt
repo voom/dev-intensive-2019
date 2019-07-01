@@ -12,7 +12,14 @@ object Utils {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun toInitials(firstName: String?, lastName: String?): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun toInitials(firstName: String?, lastName: String?): String? {
+        val firstLetter: String? = if (firstName.isNullOrBlank()) null else firstName.substring(0, 1).toUpperCase()
+        val lastLetter: String? = if (lastName.isNullOrBlank()) null else lastName.substring(0, 1).toUpperCase()
+        return when {
+            firstLetter == null && lastLetter == null -> null
+            firstLetter == null -> lastLetter
+            lastLetter == null -> firstLetter
+            else -> firstLetter + lastLetter
+        }
     }
 }
