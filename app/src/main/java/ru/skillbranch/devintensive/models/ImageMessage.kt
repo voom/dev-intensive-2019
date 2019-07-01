@@ -2,10 +2,9 @@ package ru.skillbranch.devintensive.models
 
 import java.util.*
 
-class ImageMessage(id: String, from: User?, chat: Chat, isIncoming: Boolean = false, date: Date, var image: String?) :
+class ImageMessage(id: String, from: User?, chat: Chat, date: Date, var image: String?, isIncoming: Boolean = false) :
     BaseMessage(id, from, chat, isIncoming, date) {
 
-    override fun formatMessage(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun formatMessage(): String =
+        "${from?.firstName} ${if (isIncoming) "получил" else "отправил"} изображение \"$image\" $date"
 }

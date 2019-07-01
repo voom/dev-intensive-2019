@@ -23,6 +23,10 @@ fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
     return this
 }
 
+fun Date.humanizeDiff(date: Date = Date()): String {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+}
+
 enum class TimeUnits {
     SECOND,
     MINUTE,

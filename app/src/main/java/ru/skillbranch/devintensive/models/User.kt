@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.models
 
+import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
 data class User(
@@ -9,7 +10,7 @@ data class User(
     var avatar: String?,
     var rating: Int = 0,
     var respect: Int = 0,
-    var lastVisit: Date? = Date(),
+    var lastVisit: Date? = null,
     var isOnline: Boolean = false
 ) {
 
@@ -17,10 +18,11 @@ data class User(
 
     companion object Factory {
         private var lastId = -1
+
         fun makeUser(fullName: String?): User {
-            val split = fullName?.split(' ')
             lastId++
-            return User(id = "$lastId", firstName = split?.getOrNull(0), lastName = split?.getOrNull(1))
+            val (firstName, lastName) = Utils.parseFullName(fullName)
+            return User(id = "$lastId", firstName = firstName, lastName = lastName)
         }
     }
 

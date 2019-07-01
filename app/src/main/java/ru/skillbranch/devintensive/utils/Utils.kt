@@ -7,4 +7,12 @@ object Utils {
         val last = split?.getOrNull(1).takeIf { !it.isNullOrBlank()}
         return Pair(first, last)
     }
+
+    fun transliteration(payload: String, divider: String = " "): String {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun toInitials(firstName: String?, lastName: String?): String {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }
