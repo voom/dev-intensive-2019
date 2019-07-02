@@ -26,4 +26,52 @@ data class User(
         }
     }
 
+    private constructor(builder: Builder) : this(
+        builder.id,
+        builder.firstName,
+        builder.lastName,
+        builder.avatar,
+        builder.rating,
+        builder.respect,
+        builder.lastVisit,
+        builder.isOnline
+    )
+
+    class Builder {
+        var id: String = "0"
+            private set
+        var firstName: String? = ""
+            private set
+        var lastName: String? = ""
+            private set
+        var avatar: String? = null
+            private set
+        var rating: Int = 0
+            private set
+        var respect: Int = 0
+            private set
+        var lastVisit: Date? = Date()
+            private set
+        var isOnline: Boolean = false
+            private set
+
+        fun id(id: String) = apply { this.id = id }
+
+        fun firstName(firstName: String?) = apply { this.firstName = firstName }
+
+        fun lastName(lastName: String?) = apply { this.lastName = lastName }
+
+        fun avatar(avatar: String?) = apply { this.avatar = avatar }
+
+        fun rating(rating: Int) = apply { this.rating = rating }
+
+        fun respect(respect: Int) = apply { this.respect = respect }
+
+        fun lastVisit(lastVisit: Date?) = apply { this.lastVisit = lastVisit }
+
+        fun isOnline(isOnline: Boolean) = apply { this.isOnline = isOnline }
+
+        fun build() = User(this)
+    }
+
 }
