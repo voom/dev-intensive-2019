@@ -2,6 +2,8 @@ package ru.skillbranch.devintensive.extensions
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.sign
 
 const val SECOND = 1000L
 const val MINUTE = 60 * SECOND
@@ -24,35 +26,45 @@ fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
 }
 
 fun Date.humanizeDiff(date: Date = Date()): String {
-    val diff = date.time - this.time
-    return when {
+    var diff = date.time - this.time
+    val diffSign = diff.sign
+    diff = abs(diff)
+
+    val result: String = when {
         diff in (0 * SECOND)..(1 * SECOND) -> "только что"
-        diff in (1 * SECOND)..(45 * SECOND) -> "несколько секунд назад"
-        diff in (45 * SECOND)..(75 * SECOND) -> "минуту назад"
-        diff in (75 * SECOND)..(45 * MINUTE) -> formaDiff(diff / MINUTE, TimeUnits.MINUTE)
-        diff in (45 * MINUTE)..(75 * MINUTE) -> "час назад"
-        diff in (75 * MINUTE)..(22 * HOUR) -> formaDiff(diff / HOUR, TimeUnits.HOUR)
-        diff in (22 * HOUR)..(26 * HOUR) -> "день назад"
-        diff in (26 * HOUR)..(360 * DAY) -> formaDiff(diff / DAY, TimeUnits.DAY)
-        diff > (360 * DAY) -> "более года назад"
-        else -> throw IllegalStateException("Wrong Date!")
+        diff in (1 * SECOND)..(45 * SECOND) -> "несколько секунд"
+        diff in (45 * SECOND)..(75 * SECOND) -> "минуту"
+        diff in (75 * SECOND)..(45 * MINUTE) -> formatWithPlural(diff / MINUTE, TimeUnits.MINUTE)
+        diff in (45 * MINUTE)..(75 * MINUTE) -> "час"
+        diff in (75 * MINUTE)..(22 * HOUR) -> formatWithPlural(diff / HOUR, TimeUnits.HOUR)
+        diff in (22 * HOUR)..(26 * HOUR) -> "день"
+        diff in (26 * HOUR)..(360 * DAY) -> formatWithPlural(diff / DAY, TimeUnits.DAY)
+        diff > (360 * DAY) -> "более года"
+        else -> throw IllegalStateException("Invalid Time!")
+    }
+
+    return when (result) {
+        "только что" -> result
+        "более года" -> if (diffSign < 0) "более чем через год" else "$result назад"
+        else -> if (diffSign < 0) "через $result" else "$result назад"
     }
 }
 
-private fun formaDiff(period: Long, unit: TimeUnits): String {
-    val (unitForm1, unitForm2, unitForm3) = when (unit) {
-        TimeUnits.SECOND -> Triple("секунд", "секунды", "секунду")
-        TimeUnits.MINUTE -> Triple("минут", "минуты", "минуту")
-        TimeUnits.HOUR -> Triple("часов", "часа", "час")
-        TimeUnits.DAY -> Triple("дней", "дня", "день")
+private fun formatWithPlural(period: Long, unit: TimeUnits): String {
+    val (one, few, many) = when (unit) {
+        TimeUnits.SECOND -> Triple("секунду", "секунд", "секунды")
+        TimeUnits.MINUTE -> Triple("минуту", "минут", "минуты")
+        TimeUnits.HOUR -> Triple("час", "часов", "часа")
+        TimeUnits.DAY -> Triple("день", "дней", "дня")
     }
 
-    val rem = period.rem(10)
+    val rem = period.toInt().rem(10)
 
-    return when {
-        (rem in 5..19) || rem == 0L -> "$period $unitForm1 назад"
-        rem == 1L -> "$period $unitForm3 назад"
-        else -> "$period $unitForm2 назад"
+    return when (rem) {
+        1 -> "$period $one"
+        2, 3, 4 -> "$period $many"
+        0, 5, 6, 7, 8, 9 -> "$period $few"
+        else -> throw java.lang.IllegalStateException("Invalid period!")
     }
 }
 
