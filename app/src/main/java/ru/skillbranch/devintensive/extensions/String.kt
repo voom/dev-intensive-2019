@@ -15,6 +15,7 @@ fun String.stripHtml(): String {
         .replace(Regex("\\s+"), " ") // trim spaces
         .replace(Regex("&#34;|&quot;"), "\"") // Quotation Mark
         .replace(Regex("&#38;|&amp;"), "&")  // Ampersand
+        .replace(Regex("&#39;|&apos;"), "'")  // Apostrophe
         .replace(Regex("&#47;|&frasl;"), "/")    // Slash
         .replace(Regex("&#60;|&lt;"), "<")   // Less Than Sign
         .replace(Regex("&#62;|&gt;"), ">")   // Greater Than Sign
