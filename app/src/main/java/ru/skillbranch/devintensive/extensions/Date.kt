@@ -34,11 +34,11 @@ fun Date.humanizeDiff(date: Date = Date()): String {
         diff in (0 * SECOND)..(1 * SECOND) -> "только что"
         diff in (1 * SECOND)..(45 * SECOND) -> "несколько секунд"
         diff in (45 * SECOND)..(75 * SECOND) -> "минуту"
-        diff in (75 * SECOND)..(45 * MINUTE) -> formatWithPlural(diff / MINUTE, TimeUnits.MINUTE)
+        diff in (75 * SECOND)..(45 * MINUTE) -> TimeUnits.MINUTE.plural((diff / MINUTE).toInt())
         diff in (45 * MINUTE)..(75 * MINUTE) -> "час"
-        diff in (75 * MINUTE)..(22 * HOUR) -> formatWithPlural(diff / HOUR, TimeUnits.HOUR)
+        diff in (75 * MINUTE)..(22 * HOUR) -> TimeUnits.HOUR.plural((diff / HOUR).toInt())
         diff in (22 * HOUR)..(26 * HOUR) -> "день"
-        diff in (26 * HOUR)..(360 * DAY) -> formatWithPlural(diff / DAY, TimeUnits.DAY)
+        diff in (26 * HOUR)..(360 * DAY) -> TimeUnits.DAY.plural((diff / DAY).toInt())
         diff > (360 * DAY) -> "более года"
         else -> throw IllegalStateException("Invalid Time!")
     }
@@ -50,27 +50,27 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     }
 }
 
-private fun formatWithPlural(period: Long, unit: TimeUnits): String {
-    val (one, few, many) = when (unit) {
-        TimeUnits.SECOND -> Triple("секунду", "секунд", "секунды")
-        TimeUnits.MINUTE -> Triple("минуту", "минут", "минуты")
-        TimeUnits.HOUR -> Triple("час", "часов", "часа")
-        TimeUnits.DAY -> Triple("день", "дней", "дня")
-    }
-
-    val rem = period.toInt().rem(10)
-
-    return when (rem) {
-        1 -> "$period $one"
-        2, 3, 4 -> "$period $many"
-        0, 5, 6, 7, 8, 9 -> "$period $few"
-        else -> throw java.lang.IllegalStateException("Invalid period!")
-    }
-}
-
 enum class TimeUnits {
     SECOND,
     MINUTE,
     HOUR,
-    DAY
+    DAY;
+
+    fun plural(value: Int): String {
+        val (one, few, many) = when (this) {
+            SECOND -> Triple("секунду", "секунд", "секунды")
+            MINUTE -> Triple("минуту", "минут", "минуты")
+            HOUR -> Triple("час", "часов", "часа")
+            DAY -> Triple("день", "дней", "дня")
+        }
+
+        val rem = value.rem(10)
+
+        return when (rem) {
+            1 -> "$value $one"
+            2, 3, 4 -> "$value $many"
+            0, 5, 6, 7, 8, 9 -> "$value $few"
+            else -> throw java.lang.IllegalStateException("Invalid value!")
+        }
+    }
 }
