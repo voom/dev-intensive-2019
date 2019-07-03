@@ -5,7 +5,7 @@ const val ELLIPSIS = "..."
 
 fun String.truncate(length: Int = DEFAULT_LENGTH): String {
     var text = this.trimEnd()
-    if (text.length > length) text = text.substring(0, length).trimEnd().plus(ELLIPSIS)
+    if (text.length > length) text = text.substring(0, length+1).trimEnd().plus(ELLIPSIS)
     return text
 }
 
