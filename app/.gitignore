@@ -5,3 +5,4 @@ libs/
 *.iml
 src/test/
 src/androidTest
+/proguard-rules.pro
