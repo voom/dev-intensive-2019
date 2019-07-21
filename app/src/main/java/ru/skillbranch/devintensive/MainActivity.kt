@@ -5,6 +5,7 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -39,12 +40,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         messageEt = et_message
         sendBtn = iv_send
 
+        messageEt.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) sendBtn.performClick()
+            false
+        }
+
         val status = savedInstanceState?.getString("STATUS") ?: Bender.Status.NORMAL.name
         val question = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name
         benderObj = Bender(Bender.Status.valueOf(status), Bender.Question.valueOf(question))
 
-        Log.d("DI_MainActivity","onCreate $status $question")
-        val(r, g, b) = benderObj.status.color
+        Log.d("DI_MainActivity", "onCreate $status $question")
+        val (r, g, b) = benderObj.status.color
         benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
 
         textTxt.text = benderObj.askQuestion()
@@ -61,13 +67,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
     override fun onRestart() {
         super.onRestart()
-        Log.d("DI_MainActivity","onRestart")
+        Log.d("DI_MainActivity", "onRestart")
     }
 
     /**
      * При выхове onStart() UI еще не виден пользователю, но вскоре будет виден,
      * вызывается непосредственно перед тем, как Activity становится видимой пользователю.
-     * 
+     *
      * чтение из базы данных
      * запуск сложной анимации
      * запуск потоков, отслеживания показаний датчиков, запросов к GPS, сервисов или других процессов,
@@ -77,7 +83,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
     override fun onStart() {
         super.onStart()
-        Log.d("DI_MainActivity","onStart")
+        Log.d("DI_MainActivity", "onStart")
     }
 
     /**
@@ -91,7 +97,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
     override fun onResume() {
         super.onResume()
-        Log.d("DI_MainActivity","onResume")
+        Log.d("DI_MainActivity", "onResume")
     }
 
     /**
@@ -107,7 +113,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
     override fun onPause() {
         super.onPause()
-        Log.d("DI_MainActivity","onPause")
+        Log.d("DI_MainActivity", "onPause")
     }
 
     /**
@@ -124,7 +130,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
     override fun onStop() {
         super.onStop()
-        Log.d("DI_MainActivity","onStop")
+        Log.d("DI_MainActivity", "onStop")
     }
 
     /**
@@ -137,7 +143,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("DI_MainActivity","onDestroy")
+        Log.d("DI_MainActivity", "onDestroy")
     }
 
     /**
@@ -153,9 +159,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onSaveInstanceState(outState)
         outState?.putString("STATUS", benderObj.status.name)
         outState?.putString("QUESTION", benderObj.question.name)
-        Log.d("DI_MainActivity","onSaveInstanceState ${benderObj.status.name} ${benderObj.question.name}")
+        Log.d("DI_MainActivity", "onSaveInstanceState ${benderObj.status.name} ${benderObj.question.name}")
     }
-    
+
     override fun onClick(v: View?) {
         if (v?.id == R.id.iv_send) {
             val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString().toLowerCase())
